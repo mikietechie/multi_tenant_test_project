@@ -4,4 +4,5 @@ from django.db import models
 
 class Tenant(models.Model):
     name = models.CharField(max_length=64)
-    subdomain_prefix = models.CharField(max_length=100, unique=True)
+    schema = models.CharField(max_length=128)
+    domain = models.CharField(max_length=100, unique=True)
