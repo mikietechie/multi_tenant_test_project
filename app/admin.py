@@ -1,12 +1,8 @@
 from django.contrib import admin
-from .models import User, Tenant, Branch
+from .models import User, Branch
 from .utils import tenant_from_request, set_tenant_schema_for_request
 
 # Register your models here.
-
-@admin.register(Tenant)
-class TenantAdmin(admin.ModelAdmin):
-    pass
 
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
