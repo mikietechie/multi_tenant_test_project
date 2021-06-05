@@ -7,4 +7,5 @@ class TenantMiddleware:
     
     def __call__(self, request):
         set_tenant_schema_for_request(request)
-        response = self.get
+        response = self.get_response(request)
+        return response
