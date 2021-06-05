@@ -11,7 +11,7 @@ def tenant_from_request(request):
     return Tenant.objects.get(subdomain_prefix=hostname)
 
 def set_tenant_schema_for_request(request):
-    schema = tenant_from_request(request)
+    tenant = tenant_from_request(request)
     with connection.cursor() as cursor:
-        cursor.execute(f"SET search_path to {schema}")
+        cursor.execute(f"SET search_path to {tenant.schema}")
             
