@@ -8,7 +8,7 @@ def hostname_from_request(request):
 
 def tenant_from_request(request):
     hostname = hostname_from_request(request)
-    return Tenant.objects.get(subdomain_prefix=hostname)
+    return Tenant.objects.get(domain=hostname)
 
 def set_tenant_schema_for_request(request):
     tenant = tenant_from_request(request)

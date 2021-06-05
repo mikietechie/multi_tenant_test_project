@@ -1,5 +1,8 @@
+echo making tenant migrations
+manage.py makemigrations tenants
+manage.py migrate
+echo migrated tenants
 manage.py migrate_schemas
 manage.py makemigrations
 manage.py migrate
-tenant_context_manage.py aone createsuperuser
-tenant_context_manage.py bench createsuperuser
+echo did all migrations

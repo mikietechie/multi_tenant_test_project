@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .models import Tenant, Branch
+from .models import Branch
 from .utils import set_tenant_schema_for_request,tenant_from_request
 
 def index_view(request):
