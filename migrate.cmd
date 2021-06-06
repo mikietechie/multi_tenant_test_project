@@ -1,4 +1,5 @@
 echo making tenant migrations
+manage.py migrate
 manage.py makemigrations tenants
 manage.py migrate
 echo migrated tenants
@@ -12,7 +13,7 @@ set /p wants_to_create_a_tenant =
 if "%wants_to_create_a_tenant%" == "n" goto has_tenants_already
 echo Copy and Paste the following lines one at a time in your shell
 echo from tenants.models import Tenant
-echo Tenant.objects.create(name='admin', domain='admin.co.zw', schema='public')
+echo Tenant.objects.create(name='admin', domain='localhost', schema='public')
 echo exit()
 manage.py shell
 echo Tenant must be successfully created

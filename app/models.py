@@ -15,3 +15,13 @@ class TenantAwareModel(models.Model):
 class Branch(TenantAwareModel):
     name = models.CharField(max_length=64)
     city = models.CharField(max_length=64)
+
+    class Meta:
+        """Meta definition for MODELNAME."""
+
+        verbose_name = 'Branch'
+        verbose_name_plural = 'Branches'
+
+    def __str__(self):
+        return self.name
+
