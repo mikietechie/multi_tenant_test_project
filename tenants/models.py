@@ -17,7 +17,7 @@ class Tenant(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
-        super().save(*args,**kwargs)
+        #super().save(*args,**kwargs)
         # TODO: implement correct logic to trigger the creation of a schema on the initial save of a tenant
         '''
         currently do the following:
@@ -32,16 +32,14 @@ class Tenant(models.Model):
             - tenant_context_manage.py tenant_schema createsuperuser
             done
         '''
-        '''
         if self.pk:
             super().save(*args,**kwargs)
             return
-        super().save(*args,**kwargs)
         with connection.cursor() as cursor:
             cursor.execute(f"CREATE SCHEMA IF NOT EXISTS {self.schema}")
             cursor.execute(f"SET search_path to {self.schema}")
             python_launcher = 'python' if sys.platform.startswith("win32") else 'python3'
-            os.system(f"{python_launcher} tenant_context_manage.py aone migrate")
+            os.system(f"{python_launcher} tenant_context_manage.py {self.schema} migrate")
             set_active_db_schema(self.schema)
             if User.objects.count() == 0:
                 User.objects.create(
@@ -51,18 +49,5 @@ class Tenant(models.Model):
                     is_superuser=True
                 )
             set_active_db_schema("public")
-        '''
-            
-            
-        '''
-        To add logic to create a super user instance of a new tenant
-        set_active_db_schema(self.schema)
-        User.objects.create(
-            username=f'{self.schema} admin',
-            email=f"{self.schema}@mail.com",
-            password=f"{self.schema}password",
-            is_superuser=True
-            )
-        set_active_db_schema("public")
-        '''
+        super().save(*args,**kwargs)
         
