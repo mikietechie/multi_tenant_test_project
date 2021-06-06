@@ -3,9 +3,7 @@ from .models import User, Branch
 from .utils import tenant_from_request, set_tenant_schema_for_request
 
 # Register your models here.
-
-@admin.register(Branch)
-class BranchAdmin(admin.ModelAdmin):
+class FrameworkModelAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request, *args, **kwargs):
         set_tenant_schema_for_request(request)
@@ -19,5 +17,9 @@ class BranchAdmin(admin.ModelAdmin):
         tenant = tenant_from_request(request)
         obj.tenant = tenant
         super().save_model(request, obj, form, change)
+
+@admin.register(Branch)
+class BranchAdmin(FrameworkModelAdmin):
+    pass
 
         
