@@ -7,7 +7,7 @@ class User(AbstractUser):
 
 
 class TenantAwareModel(models.Model):
-    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE)
+    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         abstract = True

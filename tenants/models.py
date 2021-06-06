@@ -17,10 +17,7 @@ class Tenant(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
-        #super().save(*args,**kwargs)
-        # TODO: implement correct logic to trigger the creation of a schema on the initial save of a tenant
         '''
-        currently do the following:
             - manage.py makemigrations
             - manage.py migrate
             - manage.py migrate_schemas
