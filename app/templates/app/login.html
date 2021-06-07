@@ -19,6 +19,14 @@
             background-color: #fff;
             padding: 32px;
             border-radius: 16px;
+            font-size: 16px;
+        }
+        .alert {
+            border: 1px solid #f00;
+            color: #f00;
+            padding: 16px 0px;
+            text-align: center;
+            padding-bottom: 20px;
         }
         form {
             width: 100%;
@@ -42,10 +50,17 @@
 </head>
 <body>
     <div class="form-container">
-        <form method="post">
+        
+        {% if message %}
+        <div class="alert">
+            {{message}}
+        </div>
+        {% endif %}
+            
+        <form action="{% url 'login' %}" method="post">
             {% csrf_token %}
             <input type="text" name="username" placeholder="username">
-            <input type="text" name="company" placeholder="company">
+            <input type="text" name="tenant_id" placeholder="company">
             <input type="password" name="password" placeholder="password">
             <button type="submit">Login</button>
         </form>

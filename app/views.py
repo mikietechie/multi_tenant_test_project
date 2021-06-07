@@ -1,19 +1,35 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 from .models import Branch, User
 from .utils import set_tenant_schema_for_request,tenant_from_request
 
+
 def login_view(request):
     if request.method == "POST":
-        request.session["tenant_id"] = request.POST.get("tenant_id")
+        tenant_id = request.POST.get("tenant_id")
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        request.session["tenant_id"] = tenant_id
         set_tenant_schema_for_request(request)
-        user = User.objects.get(
-            username=request.POST.get("username"),
-            password=request.POST.get("password")
+        user = authenticate(
+            request=request,
+            username=username,
+            password=password
         )
+        for u in User.objects.all():
+            print(u.username, u.password)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "app/login.html", {"message": "Invalid credentials!"})
     return render(request, 'app/login.html')
 
+#@login_required(login_url='login')
 def index_view(request):
     set_tenant_schema_for_request(request)
     tenant = tenant_from_request(request)
