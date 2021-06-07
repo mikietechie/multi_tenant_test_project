@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        html, body {
+            color: #333;
+            background-color: #333;
+        }
+        .form-container {
+            width: 300px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 32px;
+            border-radius: 16px;
+        }
+        form {
+            width: 100%;
+        }
+        input, button {
+            display: block;
+        }
+        input {
+            margin-bottom: 30px;
+            width: 240px;
+            padding: 16px;
+            border-width: 0px;
+            border-bottom: 1px solid #333;
+        }
+        button {
+            padding: 8px 32px;
+            font-weight: bold;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="username">
+            <input type="text" name="company" placeholder="company">
+            <input type="password" name="password" placeholder="password">
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

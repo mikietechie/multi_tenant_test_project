@@ -12,6 +12,7 @@ class Tenant(models.Model):
     name = models.CharField(max_length=64)
     schema = models.CharField(max_length=128)
     domain = models.CharField(max_length=100, unique=True)
+    tenant_id = models.CharField(max_length=128, unique=True)
     
     def __str__(self):
         return self.name
