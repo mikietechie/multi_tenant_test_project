@@ -17,8 +17,6 @@ class Branch(TenantAwareModel):
     city = models.CharField(max_length=64)
 
     class Meta:
-        """Meta definition for MODELNAME."""
-
         verbose_name = 'Branch'
         verbose_name_plural = 'Branches'
 
