@@ -20,20 +20,49 @@
             padding: 16px;
             justify-content: center;
         }
+        main {
+            width: 100%;
+            padding: 40px 0px 0px 80px;
+        }
+        .form-col {
+            padding-left: 30px;
+        }
+        form * {
+            display: block;
+            margin-bottom: 10px;
+        }
+        form input {
+            padding: 8px;
+        }
+        form button {
+            padding: 8px 0px;
+            width: 80px;
+            margin-left: 50px;
+        }
     </style>
 </head>
 <body>
     <nav>
-        <h1>Multi Tenancy Test</h1>
+        <h1>{{request.session.tenant_id}}</h1>
     </nav>
     <main>
-        <ul>
-            
-            {% for branch in branches %}
-                <li>{{ branch.name }} in {{ branch.city }}</li>
-            {% endfor %}
-                
-        </ul>
+        <div class="form-col">
+            <form action="{% url 'index' %}" method="POST">
+                {% csrf_token %}
+                <label for="name">Name</label>
+                <input type="text" name="name">
+                <label for="city">City</label>
+                <input type="text" name="city">
+                <button type="submit">Add</button>
+            </form>
+        </div>
+        <div class="list-col">
+            <ol>
+                {% for branch in branches %}
+                    <li>{{ branch.name }} in {{ branch.city }}</li>
+                {% endfor %}
+            </ol>
+        </div>
     </main>
 </body>
 </html>

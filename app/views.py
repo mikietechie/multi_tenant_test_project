@@ -33,6 +33,13 @@ def login_view(request):
 def index_view(request):
     set_tenant_schema_for_request(request)
     tenant = tenant_from_request(request)
+    if request.method == "POST":
+        print("hit")
+        name = request.POST.get("name")
+        city = request.POST.get("city")
+        Branch.objects.create(tenant=tenant, name=name, city=city)
+        return HttpResponseRedirect(reverse("index"))
+        
     context = dict(
         branches = Branch.objects.filter(tenant=tenant)
     )
