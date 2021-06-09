@@ -1,11 +1,17 @@
 from django.db import models, connection
 from app.models import User
+from .utils import install_fixtures
 import os, sys
 
 
 def set_active_db_schema(schema):
     with connection.cursor() as cursor:
             cursor.execute(f"SET search_path to {schema}")
+
+def run_raw_sql(schema, sql):
+    with connection.cursor() as cursor:
+            cursor.execute(f"SET search_path to {schema}")
+            cursor.execute(sql)
 
 
 class Tenant(models.Model):
@@ -17,34 +23,33 @@ class Tenant(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
-        '''
-            - manage.py makemigrations
-            - manage.py migrate
-            - manage.py migrate_schemas
-            - tenant_context_manage.py public createsuperuser
-            - in manage.py shell create a tenant with (name: admin, domain: localhost, schem: public)
-            - visit admin create more tenants
-            - manage.py migrate_schemas
-            - repeat for all tenants
-            - tenant_context_manage.py tenant_schema createsuperuser
-            done
-        '''
         if self.pk:
             super().save(*args,**kwargs)
             return
         with connection.cursor() as cursor:
+            set_active_db_schema("public")
+            super().save(*args,**kwargs)
             cursor.execute(f"CREATE SCHEMA IF NOT EXISTS {self.schema}")
             cursor.execute(f"SET search_path to {self.schema}")
             python_launcher = 'python' if sys.platform.startswith("win32") else 'python3'
             os.system(f"{python_launcher} tenant_context_manage.py {self.schema} migrate")
+            #os.system(f"{python_launcher} tenant_context_manage.py {self.schema} loaddata app.json")
             set_active_db_schema(self.schema)
+            if self.schema != "public":
+                run_raw_sql(
+                    schema = self.schema,
+                    sql = f"""
+                    INSERT INTO tenants_tenant (id, name, schema, tenant_id) VALUES (1, '{self.name}', '{self.schema}', '{self.tenant_id}')
+                    """
+                )
+            install_fixtures(tenant=Tenant.objects.get(id=1))
             if User.objects.count() == 0:
-                User.objects.create(
-                    username=f'{self.schema} admin',
+                user = User.objects.create(
+                    username=f'{self.schema}-admin',
                     email=f"{self.schema}@mail.com",
-                    password=f"{self.schema}password",
                     is_superuser=True
                 )
+                user.set_password(f"{self.schema}password")
+                user.save()
             set_active_db_schema("public")
-        super().save(*args,**kwargs)
         

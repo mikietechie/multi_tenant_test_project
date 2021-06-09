@@ -4,7 +4,8 @@
         "pk": "1",
         "fields": {
             "name": "Head Quarters",
-            "city": "Harare"
+            "city": "Harare",
+            "tenant": null
         }
     }
 ]
