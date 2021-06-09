@@ -6,7 +6,6 @@ from django.urls import reverse
 
 from .models import Branch, User
 from tenants.models import Tenant
-from .utils import set_tenant_schema_for_request,tenant_from_request
 from django.db import connection
 
 
@@ -16,10 +15,8 @@ def login_view(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         request.session["tenant_id"] = tenant_id
-        set_tenant_schema_for_request(request)
-        tenant = Tenant.objects.get(tenant_id=tenant_id)
         with connection.cursor() as cursor:
-            cursor.execute(f"SET search_path to {tenant.schema}")
+            cursor.execute(f"SET search_path to {tenant_id}")
             user = authenticate(
                 request=request,
                 username=username,
@@ -33,20 +30,15 @@ def login_view(request):
                 return render(request, "app/login.html", {"message": "Invalid credentials!"})
     return render(request, 'app/login.html')
 
+
 #@login_required(login_url='login')
 def index_view(request):
-    set_tenant_schema_for_request(request)
-    tenant = tenant_from_request(request)
-    with connection.cursor() as cursor:
-        print(tenant.schema)
-        cursor.execute(f"SET search_path to {tenant.schema}")
-        if request.method == "POST":
-            name = request.POST.get("name")
-            city = request.POST.get("city")
-            Branch.objects.create(name=name, city=city)
-            return HttpResponseRedirect(reverse("index"))
-            
-        context = dict(
-            branches = Branch.objects.all()
-        )
-        return render(request, 'app/index.html', context=context)
+    if request.method == "POST":
+        name = request.POST.get("name")
+        city = request.POST.get("city")
+        Branch.objects.create(name=name, city=city)
+        return HttpResponseRedirect(reverse("index"))
+    context = dict(
+        branches = Branch.objects.all()
+    )
+    return render(request, 'app/index.html', context=context)
