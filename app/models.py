@@ -5,14 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     pass
 
-
-class TenantAwareModel(models.Model):
-    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, blank=True, null=True)
-
-    class Meta:
-        abstract = True
-
-class Branch(TenantAwareModel):
+class Branch(models.Model):
     name = models.CharField(max_length=64)
     city = models.CharField(max_length=64)
 

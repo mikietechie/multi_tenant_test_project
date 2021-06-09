@@ -8,7 +8,8 @@ from .models import Branch, User
 from tenants.models import Tenant
 from .utils import set_tenant_schema_for_request,tenant_from_request
 from django.db import connection
-            
+
+
 def login_view(request):
     if request.method == "POST":
         tenant_id = request.POST.get("tenant_id")
@@ -42,7 +43,7 @@ def index_view(request):
         if request.method == "POST":
             name = request.POST.get("name")
             city = request.POST.get("city")
-            Branch.objects.create(tenant=Tenant.objects.get(pk=1), name=name, city=city)
+            Branch.objects.create(name=name, city=city)
             return HttpResponseRedirect(reverse("index"))
             
         context = dict(

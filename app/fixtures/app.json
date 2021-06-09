@@ -1,11 +1,9 @@
 [
     {
         "model": "app.Branch",
-        "pk": "1",
         "fields": {
             "name": "Head Quarters",
-            "city": "Harare",
-            "tenant": null
+            "city": "Harare"
         }
     }
 ]

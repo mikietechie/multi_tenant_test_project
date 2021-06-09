@@ -13,7 +13,6 @@ def run_raw_sql(schema, sql):
             cursor.execute(f"SET search_path to {schema}")
             cursor.execute(sql)
 
-
 class Tenant(models.Model):
     name = models.CharField(max_length=64)
     schema = models.CharField(max_length=128)
@@ -33,7 +32,6 @@ class Tenant(models.Model):
             cursor.execute(f"SET search_path to {self.schema}")
             python_launcher = 'python' if sys.platform.startswith("win32") else 'python3'
             os.system(f"{python_launcher} tenant_context_manage.py {self.schema} migrate")
-            #os.system(f"{python_launcher} tenant_context_manage.py {self.schema} loaddata app.json")
             set_active_db_schema(self.schema)
             if self.schema != "public":
                 run_raw_sql(
@@ -42,7 +40,7 @@ class Tenant(models.Model):
                     INSERT INTO tenants_tenant (id, name, schema, tenant_id) VALUES (1, '{self.name}', '{self.schema}', '{self.tenant_id}')
                     """
                 )
-            install_fixtures(tenant=Tenant.objects.get(id=1))
+            install_fixtures()
             if User.objects.count() == 0:
                 user = User.objects.create(
                     username=f'{self.schema}-admin',
