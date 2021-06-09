@@ -10,6 +10,6 @@ class TenantMiddleware:
     def __call__(self, request):
         with connection.cursor() as cursor:
             active_schema = "public" if not request.session.get("tenant_id") else request.session["tenant_id"]
-            cursor.execute(f"SET search_path to public")
+            cursor.execute(f"SET search_path to {active_schema}")
             response = self.get_response(request)
             return response
